@@ -27,7 +27,16 @@ public:
 
 	float x;
 	float y;
+
+	Point operator * (const double t);
+	
+
+	Point operator + (const Point& p2);
+	
+
 };
+
+
 
 std::ostream& operator<<(std::ostream& output_stream, const Point& point);
 std::istream& operator>>(std::istream& input_stream, Point& point);
