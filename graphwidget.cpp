@@ -28,6 +28,7 @@
 #include "C0Bezier.h";
 #include "Bspline.h";
 #include "CatmullRom.h";
+#include "C2Hermite.h";
  
 
 #define LEFT		1
@@ -123,7 +124,7 @@ m_flcCurrCurve(FL_BLACK)
 	m_ppceCurveEvaluators[CURVE_TYPE_BEZIER] = new C0Bezier();
 	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM] = new CatmullRom();
 	// Note that C2-Interpolating curve is not a requirement
-	m_ppceCurveEvaluators[CURVE_TYPE_C2INTERPOLATING] = new LinearCurveEvaluator();
+	m_ppceCurveEvaluators[CURVE_TYPE_C2INTERPOLATING] = new C2Hermite();
 
 }
 
