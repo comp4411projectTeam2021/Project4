@@ -17,8 +17,17 @@
 #define __PARTICLE_SYSTEM_H__
 
 #include "vec.h"
+#include "mat.h"
+#include "particle.h"
+#include "modelerview.h"
+#include "modelerdraw.h"
+#include <vector>
+#include <map>
 
+#include <FL/gl.h>
 
+#include<random>
+#include<ctime>
 
 class ParticleSystem {
 
@@ -29,6 +38,8 @@ public:
 	/** Constructor **/
 	ParticleSystem();
 
+	void createParticle(Mat4f camM, Mat4f curM, Vec3f v, float size, int n, float m, float t);
+	//CameraMatrix  CurrentModelViewMatrix AreCanCreateParticle NumberOfParticle MassOfParticle Time
 
 	/** Destructor **/
 	virtual ~ParticleSystem();
@@ -64,6 +75,7 @@ public:
 
 
 
+
 	// These accessor fxns are implemented for you
 	float getBakeStartTime() { return bake_start_time; }
 	float getBakeEndTime() { return bake_end_time; }
@@ -72,7 +84,9 @@ public:
 	bool isDirty() { return dirty; }
 	void setDirty(bool d) { dirty = d; }
 
-
+	vector<Particle> particleUnion;
+	vector<Vec3f> systemForce;
+	map<float, vector<Particle>> bakeInfo;
 
 protected:
 	
