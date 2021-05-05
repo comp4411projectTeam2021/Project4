@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Bspline.cpp" />
     <ClCompile Include="C0Bezier.cpp" />
+    <ClCompile Include="CatmullRom.cpp" />
     <ClCompile Include="curve.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -267,6 +268,7 @@
   <ItemGroup>
     <ClInclude Include="Bspline.h" />
     <ClInclude Include="C0Bezier.h" />
+    <ClInclude Include="CatmullRom.h" />
     <ClInclude Include="curve.h" />
     <ClInclude Include="curveevaluator.h" />
     <ClInclude Include="linearcurveevaluator.h" />
@@ -284,6 +286,7 @@
     <ClInclude Include="indicatorwindow.h" />
     <ClInclude Include="modelerapp.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="rulerwindow.h" />
     <ClInclude Include="mat.h" />
     <ClInclude Include="vec.h" />
@@ -292,6 +295,9 @@
     <None Include="cleanskel.pl" />
     <None Include="modeleruiwindows.fl" />
     <None Include="skelrenamer.pl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="modeler.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

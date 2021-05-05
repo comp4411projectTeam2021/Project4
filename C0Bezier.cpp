@@ -39,9 +39,9 @@ void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 		}
 	}
 
-	// connect end to begin
-	if (iCtrlPtCount % 3 != 0 || (iCtrlPtCount <= 3 && !bWrap))
-		for (int i = iCtrlPtCount < 3?0:(iCtrlPtCount - (iCtrlPtCount %3)); i < iCtrlPtCount - 1; i++) {
+
+	if (iCtrlPtCount % 3 != 0 || (iCtrlPtCount <= 3 && !bWrap))//Connect points left
+		for (int i = iCtrlPtCount <= 3?0:(iCtrlPtCount - (iCtrlPtCount %3)); i < iCtrlPtCount - 1; i++) {
 			float dx = ptvCtrlPts[i + 1].x - ptvCtrlPts[i].x;
 			float dy = (ptvCtrlPts[i + 1].y - ptvCtrlPts[i].y);
 			float sample = 1 / (dx * 10);
@@ -57,7 +57,7 @@ void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 		}
 
 
-	if (iCtrlPtCount % 3 != 0) {
+	if (iCtrlPtCount % 3 != 0) {//connect begin and end
 		if (bWrap) {
 			float dx = fAniLength + ptvCtrlPts[0].x - ptvCtrlPts[iCtrlPtCount - 1].x;
 			float dy = (ptvCtrlPts[0].y - ptvCtrlPts[iCtrlPtCount - 1].y);

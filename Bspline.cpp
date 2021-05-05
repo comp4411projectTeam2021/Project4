@@ -19,29 +19,12 @@ void Bspline::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 	for (int subBegin = 0; subBegin < iCtrlPtCount - 3; subBegin += 1) {
 
 		Point p[] = { ptvCtrlPts[subBegin] ,ptvCtrlPts[subBegin + 1] ,ptvCtrlPts[subBegin + 2] ,ptvCtrlPts[subBegin + 3] };
-		float sample = 1 / (p[3].x > p[0].x ? (p[3].x - p[0].x) * 10 : (fAniLength + p[3].x - p[0].x) * 10);
+		float sample = 1.0 / (p[3].x > p[0].x ? (p[3].x - p[0].x) * 10 : (fAniLength + p[3].x - p[0].x) * 10);
 		for (float t = 0; t <= 1; t += sample) {
 
 			Point Qt = calculateY(p, t);
-			//if (p[3].x > p[0].x)
-				ptvEvaluatedCurvePts.push_back(Qt);
-			/*else {
-				if (bWrap) {
-					Point temp((fAniLength + p[3].x - p[0].x) * t + p[0].x, y);
-					if (temp.x > fAniLength) {
-						temp.x -= fAniLength;
-						if (temp.x > min(p[1].x, min(p[2].x, p[3].x))) {
-							return;
-						}
-					}
-					ptvEvaluatedCurvePts.push_back(temp);
-				}
-				else {
-					
-				}
+			ptvEvaluatedCurvePts.push_back(Qt);
 
-
-			}*/
 
 		}
 	}
