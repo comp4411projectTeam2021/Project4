@@ -1,14 +1,21 @@
-#include "C0Bezier.h"
+#include "Bspline.h"
 #include "vec.h"
+float Bspline::calculateY(Point p[], float t) const
+{
+	float t2 = pow(t, 2);
+	float t3 = pow(t, 3);
+	float y = ((p[0] * (-3 * t + 3 * t2 - t3 + 1) + p[1] * (- 6 * t2 + 3 * t3+4) + p[2] * (3*t+3 * t2 - 3 * t3+1) + p[3] * t3)).y/6.0;
+	return y;
+}
 
-void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
+void Bspline::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 	std::vector<Point>& ptvEvaluatedCurvePts,
 	const float& fAniLength,
 	const bool& bWrap) const
 {
 	ptvEvaluatedCurvePts.clear();
 	int iCtrlPtCount = ptvCtrlPts.size();
-	for (int subBegin = 0; subBegin <= iCtrlPtCount - 3; subBegin += 3) {
+	for (int subBegin = 0; subBegin <= iCtrlPtCount - 3; subBegin += 1) {
 
 		Point p[] = { ptvCtrlPts[subBegin] ,ptvCtrlPts[subBegin + 1] ,ptvCtrlPts[subBegin + 2] ,ptvCtrlPts[(subBegin + 3) % iCtrlPtCount] };
 		float sample = 1 / (p[3].x > p[0].x ? (p[3].x - p[0].x) * 10 : (fAniLength + p[3].x - p[0].x) * 10);
@@ -29,8 +36,7 @@ void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 					ptvEvaluatedCurvePts.push_back(temp);
 				}
 				else {
-					ptvEvaluatedCurvePts.push_back(Point(0, ptvCtrlPts[0].y));
-					ptvEvaluatedCurvePts.push_back(Point(fAniLength, ptvCtrlPts[iCtrlPtCount - 1].y));
+					
 				}
 
 
@@ -41,7 +47,7 @@ void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 
 	// connect end to begin
 	if (iCtrlPtCount % 3 != 0 || (iCtrlPtCount <= 3 && !bWrap))
-		for (int i = iCtrlPtCount < 3?0:(iCtrlPtCount - (iCtrlPtCount %3)); i < iCtrlPtCount - 1; i++) {
+		for (int i = iCtrlPtCount < 3 ? 0 : (iCtrlPtCount - (iCtrlPtCount % 3)); i < iCtrlPtCount - 1; i++) {
 			float dx = ptvCtrlPts[i + 1].x - ptvCtrlPts[i].x;
 			float dy = (ptvCtrlPts[i + 1].y - ptvCtrlPts[i].y);
 			float sample = 1 / (dx * 10);
@@ -82,16 +88,7 @@ void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 
 
 
-
-
-
-
 }
 
-float C0Bezier::calculateY(Point p[], float t) const
-{
-	float t2 = pow(t, 2);
-	float t3 = pow(t, 3);
-	float y = (p[0] * (-3 * t + 3 * t2 - t3 + 1) + p[1] * (3 * t - 6 * t2 + 3 * t3) + p[2] * (3 * t2 - 3 * t3) + p[3] * t3).y;
-	return y;
-}
+
+
