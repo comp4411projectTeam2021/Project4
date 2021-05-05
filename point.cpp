@@ -58,6 +58,14 @@ Point Point::operator * (const double t) {
 	return Point(this->x * t, this->y * t);
 }
 
+Point Point::operator / (const double t) {
+	return Point(this->x / t, this->y / t);
+}
+
 Point Point::operator + (const Point& p2) {
 	return Point(this->x + p2.x, this->y + p2.y);
+}
+
+Point Point::operator - (const Point& p2) {
+	return Point(this->x - p2.x, this->y - p2.y);
 }

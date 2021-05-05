@@ -14,7 +14,7 @@ void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 		float sample = 1 / (p[3].x > p[0].x ? (p[3].x - p[0].x) * 10 : (fAniLength + p[3].x - p[0].x) * 10);
 		for (float t = 0; t <= 1; t += sample) {
 
-			float y = calculateY(p, t);
+			float y = calculateY(p, t).y;
 			if (p[3].x > p[0].x)
 				ptvEvaluatedCurvePts.push_back(Point((p[3].x - p[0].x) * t + p[0].x, y));
 			else {
@@ -88,10 +88,10 @@ void C0Bezier::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 
 }
 
-float C0Bezier::calculateY(Point p[], float t) const
+Point C0Bezier::calculateY(Point p[], float t) const
 {
 	float t2 = pow(t, 2);
 	float t3 = pow(t, 3);
-	float y = (p[0] * (-3 * t + 3 * t2 - t3 + 1) + p[1] * (3 * t - 6 * t2 + 3 * t3) + p[2] * (3 * t2 - 3 * t3) + p[3] * t3).y;
-	return y;
+	Point Qt = (p[0] * (-3 * t + 3 * t2 - t3 + 1) + p[1] * (3 * t - 6 * t2 + 3 * t3) + p[2] * (3 * t2 - 3 * t3) + p[3] * t3);
+	return Qt;
 }

@@ -29,9 +29,13 @@ public:
 	float y;
 
 	Point operator * (const double t);
+
+	Point operator/(const double t);
 	
 
 	Point operator + (const Point& p2);
+
+	Point operator-(const Point& p2);
 	
 
 };
