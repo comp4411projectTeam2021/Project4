@@ -265,7 +265,7 @@ void y_box(float h) {
 
 	glEnd();
 }
-
+/*
 int main()
 {
     ModelerControl controls[NUMCONTROLS ];
@@ -289,3 +289,4 @@ int main()
 
     return ModelerApplication::Instance()->Run();
 }
+*/

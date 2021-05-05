@@ -104,6 +104,8 @@
     </ClCompile>
     <ClCompile Include="Bspline.cpp">
       <Filter>Source Files</Filter>
+    <ClCompile Include="MyModel.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
