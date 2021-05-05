@@ -10,10 +10,7 @@
 
 #include <FL/gl.h>
 #include <stdlib.h>
-
-#define COLOR_RED		1.0f, 0.0f, 0.0f
-#define COLOR_GREEN		0.0f, 1.0f, 0.0f
-#define COLOR_BLUE		0.0f, 0.0f, 1.0f
+#include <iostream>
 
 enum MyModelControls
 {
@@ -49,12 +46,46 @@ ModelerView* createMyModel(int x, int y, int w, int h, char* label)
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
 
 
+Mat4f getModelViewMatrix()
+{
+	/**************************
+	**
+	**	GET THE OPENGL MODELVIEW MATRIX
+	**
+	**	Since OpenGL stores it's matricies in
+	**	column major order and our library
+	**	use row major order, we will need to
+	**	transpose what OpenGL gives us before returning.
+	**
+	**	Hint:  Use look up glGetFloatv or glGetDoublev
+	**	for how to get these values from OpenGL.
+	**
+	*******************************/
+
+	GLfloat m[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, m);
+	Mat4f matMV(m[0], m[1], m[2], m[3],
+		m[4], m[5], m[6], m[7],
+		m[8], m[9], m[10], m[11],
+		m[12], m[13], m[14], m[15]);
+
+	return matMV.transpose(); // convert to row major
+}
+
 void MyModel::draw()
 {
 	ModelerView::draw();
+	Mat4f CameraMatrix = getModelViewMatrix();
+
+	ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
+	float m[16];
 
 	setAmbientColor(.1f, .1f, .1f);
 	setDiffuseColor(.4f, 0, .2f);
+
+	//glPushMatrix();
+
+	//glPopMatrix();
 
 	glPushMatrix();
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
@@ -212,6 +243,25 @@ void MyModel::draw()
 	glRotated(VAL(HOOK1), 0.0, 1.0, 0.0);
 	glRotated(180 + VAL(HOOK2), 1.0, 0.0, 0.0);
 	drawCylinder(1, 0.1, 0.001);
+
+		Mat4f CurrentModelViewMatrix = getModelViewMatrix();
+		//if(ModelerApplication::Instance()->GetTime()-(int)ModelerApplication::Instance()->GetTime()<0.00001)
+		//void createParticle(Mat4f camM, Mat4f curM, Vec3f v, float size, int n, float m, float t);
+		ps->createParticle(CameraMatrix, CurrentModelViewMatrix, Vec3f(15, 30, 0), .5, 32, .05, ModelerApplication::Instance()->GetTime());
+/*
+		glGetFloatv(GL_MODELVIEW_MATRIX, m);
+		
+		Mat4f matMV(m[0], m[1], m[2], m[3],
+			m[4], m[5], m[6], m[7],
+			m[8], m[9], m[10], m[11],
+			m[12], m[13], m[14], m[15]);
+		matMV.transpose();
+		
+		cout << m[0] << " " << m[1] << " " << m[2] << " " << m[3] << endl;
+		cout << m[4] << " " << m[5] << " " << m[6] << " " << m[7] << endl;
+		cout << m[8] << " " << m[9] << " " << m[10] << " " << m[11] << endl;
+		cout << m[12] << " " << m[13] << " " << m[14] << " " << m[15] << endl << endl;
+		*/
 	glPopMatrix();
 	glPopMatrix();
 	glPopMatrix();
@@ -276,7 +326,8 @@ int main()
 
 
 	// You should create a ParticleSystem object ps here and then
-	// call ModelerApplication::Instance()->SetParticleSystem(ps)
+	ParticleSystem* ps = new ParticleSystem();
+	ModelerApplication::Instance()->SetParticleSystem(ps);
 	// to hook it up to the animator interface.
 
 	ModelerApplication::Instance()->Init(&createMyModel, controls, NUMCONTROLS);
