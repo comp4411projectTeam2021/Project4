@@ -32,26 +32,33 @@ void Bspline::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 	int iEvalCount = ptvEvaluatedCurvePts.size();
 	if (bWrap) {
 		
-		Point p[] = { ptvEvaluatedCurvePts[iEvalCount -1] ,ptvEvaluatedCurvePts[(iEvalCount + 1) % iEvalCount] ,ptvEvaluatedCurvePts[(iEvalCount + 2) % iEvalCount] ,ptvEvaluatedCurvePts[(iEvalCount + 3) % iEvalCount] };
-		p[1] = Point(p[1].x + fAniLength, p[1].y);
-		p[2] = Point(p[2].x + fAniLength, p[2].y);
-		p[3] = Point(p[3].x + fAniLength, p[3].y);
+		if (iEvalCount < 3) {
+			LinearCurveEvaluator::evaluateCurve(ptvCtrlPts, ptvEvaluatedCurvePts, fAniLength, bWrap);
+		}
+		else {
+			Point p[] = { ptvEvaluatedCurvePts[iEvalCount -1] ,ptvEvaluatedCurvePts[(iEvalCount + 1) % iEvalCount] ,ptvEvaluatedCurvePts[(iEvalCount + 2) % iEvalCount] ,ptvEvaluatedCurvePts[(iEvalCount + 3) % iEvalCount] };
+			p[1] = Point(p[1].x + fAniLength, p[1].y);
+			p[2] = Point(p[2].x + fAniLength, p[2].y);
+			p[3] = Point(p[3].x + fAniLength, p[3].y);
 
-		float sample = 1 / ((fAniLength + p[3].x - p[0].x) * 10);
-		for (float t = 0; t <= 1; t += sample) {
+			float sample = 1 / ((fAniLength + p[3].x - p[0].x) * 10);
+			for (float t = 0; t <= 1; t += sample) {
 
-			Point Qt = C0Bezier::calculateY(p, t);
-			ptvEvaluatedCurvePts.push_back(Qt);
+				Point Qt = C0Bezier::calculateY(p, t);
+				ptvEvaluatedCurvePts.push_back(Qt);
 
 			
-			if (Qt.x > fAniLength) {
-				Qt.x -= fAniLength;
+				if (Qt.x > fAniLength) {
+					Qt.x -= fAniLength;
+				}
+				ptvEvaluatedCurvePts.push_back(Qt);
+
+
+
 			}
-			ptvEvaluatedCurvePts.push_back(Qt);
-
-
-
 		}
+
+
 	}
 	else {
 		if (iEvalCount < 4) {
