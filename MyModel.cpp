@@ -294,7 +294,7 @@ void MyModel::draw()
 		Mat4f CurrentModelViewMatrix = getModelViewMatrix();
 		//if(ModelerApplication::Instance()->GetTime()-(int)ModelerApplication::Instance()->GetTime()<0.00001)
 		//void createParticle(Mat4f camM, Mat4f curM, Vec3f v, float size, int n, float m, float t);
-		ps->createParticle(CameraMatrix, CurrentModelViewMatrix, Vec3f(15, 30, 0), .5, 16, .05, ModelerApplication::Instance()->GetTime());
+		ps->createParticle(CameraMatrix, CurrentModelViewMatrix, Vec3f(0, 30, 15), .5, 4, .05, ModelerApplication::Instance()->GetTime());
 /*
 		glGetFloatv(GL_MODELVIEW_MATRIX, m);
 		

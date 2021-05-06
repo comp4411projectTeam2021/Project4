@@ -21,15 +21,15 @@
 ParticleSystem::ParticleSystem() 
 {
 	// TODO
-	bake_fps = 90;
+	bake_fps = 30;
 	bake_start_time = -1;
 	bake_end_time = -1;
 	simulate = false;
 	dirty = false;
 
-	particleRadius = .01;
+	particleRadius = .03;
 	systemForce.push_back(Vec3f(0, -9.8, 0));//gravity
-	systemForce.push_back(Vec3f(0, 0, 2));//wind
+	systemForce.push_back(Vec3f(1, 0, 0));//wind
 }
 
 void ParticleSystem::createParticle(Mat4f camM, Mat4f curM, Vec3f v, float size, int n, float m, float t)
@@ -167,14 +167,14 @@ void ParticleSystem::drawParticles(float t)
 		{
 			vector<Particle> currentParticleUnion = bakeInfo.at(t);
 			for (vector<Particle>::iterator it = currentParticleUnion.begin(); it != currentParticleUnion.end(); it++)
-			{
-				setDiffuseColor(COLOR_RED);
-				glPushMatrix();
-				glTranslated(it->position[0], it->position[1], it->position[2]);
-				drawSphere(particleRadius);
-				glPopMatrix();
-				//cout << it->position << endl;
-			}
+				if(it->position[1]>-8.0)
+				{
+					setDiffuseColor(COLOR_RED);
+					glPushMatrix();
+					glTranslated(it->position[0], it->position[1], it->position[2]);
+					drawSphere(particleRadius);
+					glPopMatrix();
+				}
 
 		}
 	// TODO
