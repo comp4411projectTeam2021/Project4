@@ -22,6 +22,8 @@ enum MyModelControls
 	ARM_RIGHT1, ARM_RIGHT2_1, ARM_RIGHT2_2,
 	JAW_LEFT, JAW_RIGHT,
 	TAIL1, TAIL2, TAIL3, TAIL4, HOOK1, HOOK2,
+
+	showBillboarded,
     
     NUMCONTROLS,
 };
@@ -72,6 +74,37 @@ Mat4f getModelViewMatrix()
 	return matMV.transpose(); // convert to row major
 }
 
+void billboardCheatSphericalBegin() {
+
+	float m[16];
+
+	// save the current modelview matrix
+	glPushMatrix();
+
+	// get the current modelview matrix
+	glGetFloatv(GL_MODELVIEW_MATRIX, m);
+
+	// undo all rotations
+	// beware all scaling is lost as well 
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++) {
+			if (i == j)
+				m[i * 4 + j] = 1.0;
+			else
+				m[i * 4 + j] = 0.0;
+		}
+
+	// set the modelview with no rotations
+	glLoadMatrixf(m);
+}
+
+void billboardEnd() {
+
+	// restore the previously 
+	// stored modelview matrix
+	glPopMatrix();
+}
+
 void MyModel::draw()
 {
 	ModelerView::draw();
@@ -80,13 +113,27 @@ void MyModel::draw()
 	ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
 	float m[16];
 
+	
+
+	//Billboarding
+	if(VAL(showBillboarded)==1){
+	setAmbientColor(.08f, .08f, .08f);
+	setDiffuseColor(1.0f, 0.0f, 0.0f);
+		glPushMatrix();
+		glTranslated(5, 0, 5);
+		glRotated(45, 0.0, 1.0, 0.0);
+			billboardCheatSphericalBegin();
+				drawBox(.5, 2, .5);
+			billboardEnd();
+		glPopMatrix();
+	}
+	//glPushMatrix();
+	//glPopMatrix();
+	// 
+	//MainModel
 	setAmbientColor(.1f, .1f, .1f);
 	setDiffuseColor(.4f, 0, .2f);
-
-	//glPushMatrix();
-
-	//glPopMatrix();
-
+	
 	glPushMatrix();
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
 
@@ -268,25 +315,6 @@ void MyModel::draw()
 	glPopMatrix();
 	glPopMatrix();
 	glPopMatrix();
-	/*
-		glPushMatrix();
-		glTranslated(-1.5, 0, -2);
-		glScaled(3, 1, 4);
-		drawBox(1, 1, 1);
-		glPopMatrix();
-			glRotated(VAL(ROTATE), 0.0, 1.0, 0.0);
-			glRotated(-90, 1.0, 0.0, 0.0);
-			drawCylinder(VAL(HEIGHT), 0.1, 0.1);
-
-			glTranslated(0.0, 0.0, VAL(HEIGHT));
-			drawCylinder(1, 1.0, 0.9);
-
-			glTranslated(0.0, 0.0, 0.5);
-			glRotated(90, 1.0, 0.0, 0.0);
-			drawCylinder(4, 0.1, 0.2);
-			glPopMatrix();
-			*/
-
 	glPopMatrix();
 
 	endDraw();
@@ -322,6 +350,7 @@ int main()
 	controls[TAIL4] = ModelerControl("Tail-4 Angle", -15, 15, 0.1f, 0);
 	controls[HOOK1] = ModelerControl("Hook Angle-1", -15, 15, 0.1f, 0);
 	controls[HOOK2] = ModelerControl("Hook Angle-2", -15, 15, 0.1f, 0);
+	controls[showBillboarded] = ModelerControl("Show Billboarded", 0, 1, 1, 0);
 
 
 
