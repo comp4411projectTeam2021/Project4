@@ -84,6 +84,7 @@ public:
 	bool isDirty() { return dirty; }
 	void setDirty(bool d) { dirty = d; }
 
+	float particleRadius;
 	vector<Particle> particleUnion;
 	vector<Vec3f> systemForce;
 	map<float, vector<Particle>> bakeInfo;

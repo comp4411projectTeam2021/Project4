@@ -26,6 +26,8 @@ ParticleSystem::ParticleSystem()
 	bake_end_time = -1;
 	simulate = false;
 	dirty = false;
+
+	particleRadius = .01;
 	systemForce.push_back(Vec3f(0, -9.8, 0));//gravity
 	systemForce.push_back(Vec3f(0, 0, 2));//wind
 }
@@ -131,6 +133,21 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 	if(isSimulate())
 		if (bakeInfo.find(t) == bakeInfo.end())
 		{
+			//detecting collisions
+			for (vector<Particle>::iterator i = particleUnion.begin(); i != particleUnion.end(); i++)
+				for (vector<Particle>::iterator j = particleUnion.begin(); j != particleUnion.end() && i != j; j++)
+					if ((i->position - j->position).length() - (double)particleRadius * 2 <= 0)
+					{
+						Vec3f collisionDirectioni = j->position - i->position; collisionDirectioni.normalize();
+						Vec3f collisionDirectionj = i->position - j->position; collisionDirectionj.normalize();
+						Vec3f vi = i->velocity; Vec3f vj = j->velocity;
+						Vec3f vis = vi * collisionDirectioni * collisionDirectioni;
+						Vec3f vjs = vj * collisionDirectionj * collisionDirectionj;
+						Vec3f vit = vi - vis; Vec3f vjt = vj - vjs;
+						swap(vis, vjs);
+						i->velocity = vis + vit;
+						j->velocity = vjs + vjt;
+					}
 			for (vector<Particle>::iterator it = particleUnion.begin(); it != particleUnion.end(); it++)
 			{
 				it->position += it->velocity / bake_fps + it->force / it->mass / bake_fps / bake_fps / 2;//x+=vt+at^2/2
@@ -154,7 +171,7 @@ void ParticleSystem::drawParticles(float t)
 				setDiffuseColor(COLOR_RED);
 				glPushMatrix();
 				glTranslated(it->position[0], it->position[1], it->position[2]);
-				drawSphere(.01);
+				drawSphere(particleRadius);
 				glPopMatrix();
 				//cout << it->position << endl;
 			}
