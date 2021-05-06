@@ -1,5 +1,7 @@
 #pragma once
 #include "Bspline.h"
+#include "modelerapp.h"
+
 class CatmullRom :
     public Bspline
 {

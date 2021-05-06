@@ -1,9 +1,19 @@
 #include "CatmullRom.h"
+#include "mat.h"
+#include "vec.h"
 Point CatmullRom::calculateY(Point p[], float t) const
 {
+	float ten = ModelerApplication::Instance()->GetControlValue(26);
 	float t2 = pow(t, 2);
 	float t3 = pow(t, 3);
-	Point Qt = ((p[2] - p[0]) * t + p[0] * (2 * t2 - t3) - p[1] * (5 * t2 - 3 * t3 - 2) + p[2] * (4 * t2 - 3 * t3) - p[3] * (t2 - t3))/2.0;
+	Point Qt;
+	/*if (ten == 0.5)
+		Qt = ((p[2] - p[0]) * t + p[0] * (2 * t2 - t3) - p[1] * (5 * t2 - 3 * t3 - 2) + p[2] * (4 * t2 - 3 * t3) - p[3] * (t2 - t3)) / 2.0;
+	else*/
+	Mat4f M = { 0,1,0,0,-ten ,0,ten ,0,2 * ten ,ten - 3,3 - 2 * ten ,-ten ,-ten ,2 - ten ,ten - 2,ten };
+	Vec4f tVec = { 1,t,t2,t3 };
+	Vec4f res = tVec * M;
+	Qt = p[0] * res[0] + p[1] * res[1] + p[2] * res[2] + p[3] * res[3];
 	return Qt;
 }
 

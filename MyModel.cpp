@@ -24,6 +24,7 @@ enum MyModelControls
 	TAIL1, TAIL2, TAIL3, TAIL4, HOOK1, HOOK2,
 
 	showBillboarded,
+	tension,//DO NOT CHANGE, HARD CODED TO BE 26
     
     NUMCONTROLS,
 };
@@ -350,6 +351,8 @@ int main()
 	controls[TAIL4] = ModelerControl("Tail-4 Angle", -15, 15, 0.1f, 0);
 	controls[HOOK1] = ModelerControl("Hook Angle-1", -15, 15, 0.1f, 0);
 	controls[HOOK2] = ModelerControl("Hook Angle-2", -15, 15, 0.1f, 0);
+	controls[tension] = ModelerControl("Tension control", 0, 1, 0.05f, 0.5);
+	//controls[tension].m_value = 0.5;//init calue
 	controls[showBillboarded] = ModelerControl("Show Billboarded", 0, 1, 1, 0);
 
 
