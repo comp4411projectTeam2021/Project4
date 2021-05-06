@@ -62,19 +62,24 @@ void CatmullRom::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 			ptvEvaluatedCurvePts.push_back(temp);
 
 		}
+		float maxX = -1;
 
 		int iCtrlPtCount = newCtrlPts.size();
 		for (int subBegin = 0; subBegin < iCtrlPtCount - 3; subBegin += 1) {
 
 			Point p[] = { newCtrlPts[subBegin] ,newCtrlPts[subBegin + 1] ,newCtrlPts[subBegin + 2] ,newCtrlPts[subBegin + 3] };
-			float sample = 1.0 / (p[3].x > p[0].x ? (p[3].x - p[0].x) * 10 : (fAniLength + p[3].x - p[0].x) * 10);
+			float sample = 1.0 / (p[3].x > p[0].x ? (p[3].x - p[0].x) * 10 : (fAniLength + p[3].x - p[0].x) * 30);
 			for (float t = 0; t <= 1; t += sample) {
 
 				Point Qt = calculateY(p, t);
-				ptvEvaluatedCurvePts.push_back(Qt);
+				if (Qt.x >= maxX) {
+					ptvEvaluatedCurvePts.push_back(Qt);
+					maxX = Qt.x;
+				}
 
 
 			}
+			//ptvEvaluatedCurvePts.push_back(newCtrlPts[subBegin + 3]);
 		}
 
 	}

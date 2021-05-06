@@ -54,38 +54,22 @@ void C2Hermite::evaluateCurve(const std::vector<Point>& ptvCtrlPts, std::vector<
 		}
 
 		//Curve compute
-		//std::vector<Point> newCtrlPts;
-		//newCtrlPts.reserve(iCtrlPtCount*2);
 
+		float maxX = -1;
 		for (int subBegin = 0; subBegin < iCtrlPtCount-1 ; subBegin ++) {
 
 			Point p[] = { ptvCtrlPts[subBegin] ,ptvCtrlPts[subBegin + 1] ,D[subBegin ] ,D[subBegin + 1] };
-			float sample = 1 / ((p[1].x - p[0].x) * 10);
+			float sample = 1 / ((p[1].x - p[0].x) * 30);
 			for (float t = 0; t <= 1; t += sample) {
 
 				Point Qt = calculateY(p, t);
-				//if (p[3].x > p[0].x)
-				ptvEvaluatedCurvePts.push_back(Qt);
-				/*else {
-					if (bWrap) {
-						Point temp((fAniLength + p[3].x - p[0].x) * t + p[0].x, y);
-						if (temp.x > fAniLength) {
-							temp.x -= fAniLength;
-							if (temp.x > min(p[1].x, min(p[2].x, p[3].x))) {
-								return;
-							}
-						}
-						ptvEvaluatedCurvePts.push_back(temp);
-					}
-					else {
-						ptvEvaluatedCurvePts.push_back(Point(0, ptvCtrlPts[0].y));
-						ptvEvaluatedCurvePts.push_back(Point(fAniLength, ptvCtrlPts[iCtrlPtCount - 1].y));
-					}
-
-
-				}*/
+				if (Qt.x >= maxX) {
+					ptvEvaluatedCurvePts.push_back(Qt);
+					maxX = Qt.x;
+				}
 
 			}
+			//ptvEvaluatedCurvePts.push_back(ptvCtrlPts[subBegin + 1]);
 		}
 
 		if (bWrap) {
