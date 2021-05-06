@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Bspline.cpp" />
     <ClCompile Include="C0Bezier.cpp" />
+    <ClCompile Include="C2Hermite.cpp" />
     <ClCompile Include="CatmullRom.cpp" />
     <ClCompile Include="curve.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -268,6 +269,7 @@
   <ItemGroup>
     <ClInclude Include="Bspline.h" />
     <ClInclude Include="C0Bezier.h" />
+    <ClInclude Include="C2Hermite.h" />
     <ClInclude Include="CatmullRom.h" />
     <ClInclude Include="curve.h" />
     <ClInclude Include="curveevaluator.h" />
