@@ -1,3 +1,3 @@
-Bells Count/n
+Bells Count
 
 [0.5] Billboard
