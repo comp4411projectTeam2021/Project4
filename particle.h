@@ -7,9 +7,9 @@
 class Particle 
 {
 public:
-	Particle(Vec3f p, Vec3f v, double m) :position(p), velocity(v), mass(m) {}
+	Particle(Vec3f p, Vec3f v, float m) :position(p), velocity(v), mass(m) {}
 
-	double mass;
+	float mass;
 	Vec3f position, velocity, force;
 };
 
