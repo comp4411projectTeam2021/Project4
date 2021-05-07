@@ -151,7 +151,7 @@ inline void MyModel::drawModel(bool WF) {
 		setAmbientColor(0,0,0);
 		setDiffuseColor(0, 0, 0);
 		setSpecularColor(0, 0, 0);
-		setShininess(0);
+		setShininess(1);
 	}
 
 
@@ -358,6 +358,7 @@ void MyModel::draw()
 {
 	ModelerView::draw();
 	if (ModelerApplication::Instance()->GetControlValue(CellShading) == 1) {
+		glEnable(GL_CULL_FACE);
 		glUseProgram(darkProgramID);
 		glCullFace(GL_FRONT);
 		glColor3f(0, 0, 0);
@@ -370,6 +371,7 @@ void MyModel::draw()
 		//drawTriangle(1, -1, 0, 0, -1, 0, 0, -1, 1);
 		drawModel(true);
 
+
 		glUseProgram(cellProgramID);
 		glLineWidth(1);
 		glDisable(GL_POLYGON_OFFSET_LINE);
@@ -379,7 +381,7 @@ void MyModel::draw()
 		setDrawMode(NORMAL);
 	}
 	else {		
-		
+		glDisable(GL_CULL_FACE);
 		//glDetachShader(programID, FshaderID);
 		//glDetachShader(programID, DarkshaderID);
 		//glDetachShader(programID, VshaderID);

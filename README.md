@@ -9,3 +9,5 @@ Bells Count
 
 [0.5] user control the tension 
 (**need to adjust curve in control list instead of slider bar**)
+
+[3]Cell Shading
