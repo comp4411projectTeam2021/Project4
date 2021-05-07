@@ -1,6 +1,16 @@
 #pragma warning (disable : 4305)
 #pragma warning (disable : 4244)
 #pragma warning(disable : 4786)
+#pragma comment (lib,"glew32.lib")
+#pragma comment(lib,"opengl32.lib") 
+#if defined(__APPLE__)
+#  include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
+#else
+#  if defined(WIN32)
+#    define GLEW_STATIC 1
+#  endif
+#  include <GL/glew.h>
+#endif
 
 #include "modelerview.h"
 #include "modelerapp.h"
@@ -34,6 +44,7 @@ class MyModel : public ModelerView
 public:
 	MyModel(int x, int y, int w, int h, char* label)
 		: ModelerView(x, y, w, h, label) {}
+	void drawModel();
 	virtual void draw();
 };
 
@@ -106,26 +117,22 @@ void billboardEnd() {
 	glPopMatrix();
 }
 
-void MyModel::draw()
-{
-	ModelerView::draw();
+inline void MyModel::drawModel() {
 	Mat4f CameraMatrix = getModelViewMatrix();
 
 	ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
 	float m[16];
 
-	
-
 	//Billboarding
-	if(VAL(showBillboarded)==1){
-	setAmbientColor(.08f, .08f, .08f);
-	setDiffuseColor(1.0f, 0.0f, 0.0f);
+	if (VAL(showBillboarded) == 1) {
+		setAmbientColor(.08f, .08f, .08f);
+		setDiffuseColor(1.0f, 0.0f, 0.0f);
 		glPushMatrix();
 		glTranslated(5, 0, 5);
 		glRotated(45, 0.0, 1.0, 0.0);
-			billboardCheatSphericalBegin();
-				drawBox(.5, 2, .5);
-			billboardEnd();
+		billboardCheatSphericalBegin();
+		drawBox(.5, 2, .5);
+		billboardEnd();
 		glPopMatrix();
 	}
 	//glPushMatrix();
@@ -134,7 +141,7 @@ void MyModel::draw()
 	//MainModel
 	setAmbientColor(.1f, .1f, .1f);
 	setDiffuseColor(.4f, 0, .2f);
-	
+
 	glPushMatrix();
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
 
@@ -284,7 +291,7 @@ void MyModel::draw()
 	glRotated(30 + VAL(TAIL3), 1.0, 0.0, 0.0);
 	drawBox(.4, .4, -1.2);
 	glPushMatrix();
-	glTranslated(.05, 0.06, -1.2);glRotated(30 + VAL(TAIL4), 1.0, 0.0, 0.0);
+	glTranslated(.05, 0.06, -1.2); glRotated(30 + VAL(TAIL4), 1.0, 0.0, 0.0);
 	drawBox(.3, .3, -1);
 	glPushMatrix();
 	glTranslated(.15, .15, -.9);
@@ -292,24 +299,24 @@ void MyModel::draw()
 	glRotated(180 + VAL(HOOK2), 1.0, 0.0, 0.0);
 	drawCylinder(1, 0.1, 0.001);
 
-		Mat4f CurrentModelViewMatrix = getModelViewMatrix();
-		//if(ModelerApplication::Instance()->GetTime()-(int)ModelerApplication::Instance()->GetTime()<0.00001)
-		//void createParticle(Mat4f camM, Mat4f curM, Vec3f v, float size, int n, float m, float t);
-		ps->createParticle(CameraMatrix, CurrentModelViewMatrix, Vec3f(0, 30, 15), .5, 4, .05, ModelerApplication::Instance()->GetTime());
-/*
-		glGetFloatv(GL_MODELVIEW_MATRIX, m);
-		
-		Mat4f matMV(m[0], m[1], m[2], m[3],
-			m[4], m[5], m[6], m[7],
-			m[8], m[9], m[10], m[11],
-			m[12], m[13], m[14], m[15]);
-		matMV.transpose();
-		
-		cout << m[0] << " " << m[1] << " " << m[2] << " " << m[3] << endl;
-		cout << m[4] << " " << m[5] << " " << m[6] << " " << m[7] << endl;
-		cout << m[8] << " " << m[9] << " " << m[10] << " " << m[11] << endl;
-		cout << m[12] << " " << m[13] << " " << m[14] << " " << m[15] << endl << endl;
-		*/
+	Mat4f CurrentModelViewMatrix = getModelViewMatrix();
+	//if(ModelerApplication::Instance()->GetTime()-(int)ModelerApplication::Instance()->GetTime()<0.00001)
+	//void createParticle(Mat4f camM, Mat4f curM, Vec3f v, float size, int n, float m, float t);
+	ps->createParticle(CameraMatrix, CurrentModelViewMatrix, Vec3f(0, 30, 15), .5, 4, .05, ModelerApplication::Instance()->GetTime());
+	/*
+			glGetFloatv(GL_MODELVIEW_MATRIX, m);
+
+			Mat4f matMV(m[0], m[1], m[2], m[3],
+				m[4], m[5], m[6], m[7],
+				m[8], m[9], m[10], m[11],
+				m[12], m[13], m[14], m[15]);
+			matMV.transpose();
+
+			cout << m[0] << " " << m[1] << " " << m[2] << " " << m[3] << endl;
+			cout << m[4] << " " << m[5] << " " << m[6] << " " << m[7] << endl;
+			cout << m[8] << " " << m[9] << " " << m[10] << " " << m[11] << endl;
+			cout << m[12] << " " << m[13] << " " << m[14] << " " << m[15] << endl << endl;
+			*/
 	glPopMatrix();
 	glPopMatrix();
 	glPopMatrix();
@@ -317,6 +324,33 @@ void MyModel::draw()
 	glPopMatrix();
 	glPopMatrix();
 	glPopMatrix();
+}
+
+void MyModel::draw()
+{
+	ModelerView::draw();
+
+
+	//glCullFace(GL_FRONT);
+	//glColor3f(0, 0, 0);
+	//glLineWidth(5);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glEnable(GL_POLYGON_OFFSET_LINE);
+	//glPolygonOffset(1, 2);
+	//setDrawMode(WIREFRAME);
+	////glShadeModel(GL_FLAT);
+	////drawTriangle(1, -1, 0, 0, -1, 0, 0, -1, 1);
+	////draw model with GL_TRIANGLES (yeah, I know...)
+
+	//drawModel();
+
+	//glDisable(GL_POLYGON_OFFSET_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	////glShadeModel(GL_SMOOTH);
+	//glCullFace(GL_BACK);
+	//setDrawMode(NORMAL);
+	drawModel();
+
 
 	endDraw();
 

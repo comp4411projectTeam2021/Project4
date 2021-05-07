@@ -1,5 +1,14 @@
 #pragma warning(disable : 4786)
 
+#if defined(__APPLE__)
+#  include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
+#else
+#  if defined(WIN32)
+#    define GLEW_STATIC 1
+#  endif
+#  include <GL/glew.h>
+#endif
+
 #include "particleSystem.h"
 #include "modelerapp.h"
 #include "modelerview.h"
@@ -71,6 +80,7 @@ void ModelerApplication::Init(ModelerViewCreator_f createView,
 
 	DWORD dwBtnFaceColor = GetSysColor(COLOR_BTNFACE);
 
+
 	// Get consistent background color
 	Fl::background(GetRValue(dwBtnFaceColor), 
 		GetGValue(dwBtnFaceColor),
@@ -95,6 +105,9 @@ void ModelerApplication::Init(ModelerViewCreator_f createView,
 
 	ModelerView* modelerView = createView(0, 0, 100, 100 ,NULL);
 	m_ui->replaceModelerView(modelerView);
+
+	
+
 }
 
 ModelerApplication::~ModelerApplication()
@@ -112,12 +125,14 @@ int ModelerApplication::Run()
 	}
 
     // Just tell FLTK to go for it.
-   	Fl::visual( FL_RGB | FL_DOUBLE );
+   	Fl::visual( FL_RGB | FL_DOUBLE);
 	m_ui->show();
 	Fl::add_timeout(0, ModelerApplication::RedrawLoop, NULL);
 
 	// Automatically load animator.ani and animator.ani.cam if they exist
 	m_ui->autoLoadNPlay();
+
+
 
 	return Fl::run();
 }
