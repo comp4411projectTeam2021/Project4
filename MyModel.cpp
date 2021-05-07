@@ -35,6 +35,7 @@ enum MyModelControls
 
 	showBillboarded,
 	tension,//DO NOT CHANGE, HARD CODED TO BE 26
+	CellShading,
     
     NUMCONTROLS,
 };
@@ -44,7 +45,7 @@ class MyModel : public ModelerView
 public:
 	MyModel(int x, int y, int w, int h, char* label)
 		: ModelerView(x, y, w, h, label) {}
-	void drawModel();
+	void drawModel(bool WF);
 	virtual void draw();
 };
 
@@ -117,7 +118,7 @@ void billboardEnd() {
 	glPopMatrix();
 }
 
-inline void MyModel::drawModel() {
+inline void MyModel::drawModel(bool WF) {
 	Mat4f CameraMatrix = getModelViewMatrix();
 
 	ParticleSystem* ps = ModelerApplication::Instance()->GetParticleSystem();
@@ -139,12 +140,26 @@ inline void MyModel::drawModel() {
 	//glPopMatrix();
 	// 
 	//MainModel
-	setAmbientColor(.1f, .1f, .1f);
-	setDiffuseColor(.4f, 0, .2f);
+	
+	if (!WF) {
+		setAmbientColor(.1f, .1f, .1f);
+		setDiffuseColor(.4f, 0, .2f);
+		setSpecularColor(.2f, 0, .1f);
+		setShininess(0.2);
+	}
+	else {
+		setAmbientColor(0,0,0);
+		setDiffuseColor(0, 0, 0);
+		setSpecularColor(0, 0, 0);
+		setShininess(0);
+	}
+
 
 	glPushMatrix();
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
-
+	//float m[16];
+	//glGetFloatv(GL_MODELVIEW_MATRIX, m);
+	//printf("\n\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n\n", m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7],m[8],m[10],m[11],m[12],m[13],m[14],m[15]);
 	glPushMatrix();
 	glRotated(VAL(FRONT_BODY), 0.0, 1.0, 0.0);
 	glTranslated(-1, 0, .1);
@@ -324,32 +339,61 @@ inline void MyModel::drawModel() {
 	glPopMatrix();
 	glPopMatrix();
 	glPopMatrix();
+
+	//Test
+
+	if (!WF) {
+		setAmbientColor(.1f, .1f, .1f);
+		setDiffuseColor(0, .2f, .4f);
+		setSpecularColor(0, .1f, .2f);
+		setShininess(0.2);
+	}
+	glPushMatrix();
+	glTranslatef(10, 0, 0);
+	drawSphere(5);
+	glPopMatrix();
 }
 
 void MyModel::draw()
 {
 	ModelerView::draw();
+	if (ModelerApplication::Instance()->GetControlValue(CellShading) == 1) {
+		glUseProgram(darkProgramID);
+		glCullFace(GL_FRONT);
+		glColor3f(0, 0, 0);
+		glLineWidth(5);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glEnable(GL_POLYGON_OFFSET_LINE);
+		glPolygonOffset(1, 1);
+		setDrawMode(WIREFRAME);
+		//glShadeModel(GL_FLAT);
+		//drawTriangle(1, -1, 0, 0, -1, 0, 0, -1, 1);
+		drawModel(true);
+
+		glUseProgram(cellProgramID);
+		glLineWidth(1);
+		glDisable(GL_POLYGON_OFFSET_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		//glShadeModel(GL_SMOOTH);
+		glCullFace(GL_BACK);
+		setDrawMode(NORMAL);
+	}
+	else {		
+		
+		//glDetachShader(programID, FshaderID);
+		//glDetachShader(programID, DarkshaderID);
+		//glDetachShader(programID, VshaderID);
+		//glDeleteProgram(programID);
+		//programID = -1;
+		//glShadeModel(GL_SMOOTH);
+		glUseProgram(defaultprogramID);
 
 
-	//glCullFace(GL_FRONT);
-	//glColor3f(0, 0, 0);
-	//glLineWidth(5);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glEnable(GL_POLYGON_OFFSET_LINE);
-	//glPolygonOffset(1, 2);
-	//setDrawMode(WIREFRAME);
-	////glShadeModel(GL_FLAT);
-	////drawTriangle(1, -1, 0, 0, -1, 0, 0, -1, 1);
-	////draw model with GL_TRIANGLES (yeah, I know...)
+	}
 
-	//drawModel();
 
-	//glDisable(GL_POLYGON_OFFSET_LINE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	////glShadeModel(GL_SMOOTH);
-	//glCullFace(GL_BACK);
-	//setDrawMode(NORMAL);
-	drawModel();
+
+	drawModel(false);
 
 
 	endDraw();
@@ -388,6 +432,7 @@ int main()
 	controls[tension] = ModelerControl("Tension control", 0, 1, 0.05f, 0.5);
 	//controls[tension].m_value = 0.5;//init calue
 	controls[showBillboarded] = ModelerControl("Show Billboarded", 0, 1, 1, 0);
+	controls[CellShading] = ModelerControl("Cell Shading", 0, 1, 1, 0);
 
 
 
