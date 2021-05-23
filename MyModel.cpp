@@ -11,13 +11,13 @@
 #  endif
 #  include <GL/glew.h>
 #endif
-
+#include<algorithm>
 #include "modelerview.h"
 #include "modelerapp.h"
 #include "modelerdraw.h"
 #include "particleSystem.h"
 
-#include<algorithm>
+
 
 #include <FL/gl.h>
 #include <stdlib.h>
