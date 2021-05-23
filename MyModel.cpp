@@ -17,6 +17,7 @@
 #include "modelerdraw.h"
 #include "particleSystem.h"
 
+#include<algorithm>
 
 #include <FL/gl.h>
 #include <stdlib.h>
