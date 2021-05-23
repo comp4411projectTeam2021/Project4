@@ -11,7 +11,6 @@
 #  endif
 #  include <GL/glew.h>
 #endif
-#include<algorithm>
 #include "modelerview.h"
 #include "modelerapp.h"
 #include "modelerdraw.h"

@@ -1,6 +1,8 @@
 #pragma once
 #include "curveevaluator.h"
 #include "linearcurveevaluator.h"
+#include<algorithm>
+
 class C0Bezier :
     public LinearCurveEvaluator
 {
